@@ -16,14 +16,15 @@ ts.match <- function(x, y, cutoff=1,boost=TRUE){
   }else{
     match.index <- round(slider::slide_dbl(x, fn, .before = slide.size - 1L, .complete = TRUE), 4)
   }
+  print(match.index)
   index.cutoff.end <- which(match.index >= cutoff)
     index.cutoff.start <- index.cutoff.end - (slide.size-1L)
 
   # print(match.index)
     if(length(index.cutoff.end) == 0){
-      tibble::tibble(start = NA, end = NA)
+      data.frame(start = NA, end = NA)
       } else {
-    tibble::tibble(start = index.cutoff.start, end = index.cutoff.end)
+    data.frame(start = index.cutoff.start, end = index.cutoff.end)
       }
 }
 

@@ -14,8 +14,8 @@ NumericVector corw(NumericVector x,NumericVector y){
 
   bool fresh = false;
   double sY = sum(y);
-  double sYSq = sum(pow(y,2));
-  double K = sqrt((ny*sYSq)-pow(sY,2));
+  double sYSq = sum((y*y));
+  double K = sqrt((ny*sYSq)-(sY*sY));
   double sX;
   double sXSq;
   double old_x_one;

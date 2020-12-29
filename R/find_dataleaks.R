@@ -10,22 +10,28 @@
 #' @importFrom  stats na.omit
 #' @useDynLib tsdataleaks
 #' @importFrom Rcpp sourceCpp
+#' @importFrom RcppParallel RcppParallelLibs
 #' @return list of matching quantities
 #' @export
 find_dataleaks <- function(lstx, h, cutoff=1,boost=TRUE){
-  Rcpp::sourceCpp("src/corw.cpp")
   n <- length(lstx)
   if (is.null(names(lstx)) == TRUE){names(lstx) <- 1:n} # This is important when displying the final results
   result <- list()
 
+  #TODO Call RCpp function getLeakIndices and get a list of matrices
   for (i in 1:n){
 
     y = utils::tail(lstx[[i]], h)
     result[[i]] <- purrr::map(lstx, ts.match, y=y,boost=boost)
 
   }
-
+  #get list of list of tibbles for each series
+  # print("result")
+  # print(result)
   result.list <- purrr::map(result, plyr::ldply, data.frame)
+  #get list of tibbles with id added to identify series
+  # print("result.list")
+  # print(result.list)
   n.result.list <- length(result.list)
   resul.list.clean <- list()
   for(i in 1:n){
@@ -34,9 +40,12 @@ find_dataleaks <- function(lstx, h, cutoff=1,boost=TRUE){
   }
 
   names(resul.list.clean) <- names(lstx)
+  # print("resul.list.clean")
+  # print(resul.list.clean)
   nonmissinglist <- purrr::map(resul.list.clean, stats::na.omit)
   #nonmissinglist
-
+  # print("nonmissinglist")
+  # print(nonmissinglist)
 
   namesx <- names(nonmissinglist)
 
@@ -45,22 +54,26 @@ find_dataleaks <- function(lstx, h, cutoff=1,boost=TRUE){
   for (i in 1: length(nonmissinglist)){
     a[[i]] <- which(nonmissinglist[[i]]$.id == namesx[i])
   }
-
+  # print("a")
+  # print(a)
 
   selfcalculationindex <- purrr::map(a, function(temp){temp[length(temp)]})
-
-
+  # print("selfcalculationindex")
+  # print(selfcalculationindex)
   for (i in 1: length(nonmissinglist)){
     nonmissinglist[[i]] <- nonmissinglist[[i]][-selfcalculationindex[[i]], ]
- }
-
+  }
+  # print("nonmissinglist")
+  # print(nonmissinglist)
 
   # Remove empty entries
   isEmpty <- function(y){nrow(y)==0}
 
   nonempty.list <-  purrr::map(nonmissinglist, isEmpty)
-  nonmissinglist[unlist(nonempty.list)==FALSE]
+  # print("nonempty.list")
+  # print(nonempty.list)
 
+  nonmissinglist[unlist(nonempty.list)==FALSE]
 
 }
 #' @examples
