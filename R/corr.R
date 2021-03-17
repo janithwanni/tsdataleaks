@@ -21,9 +21,11 @@ ts.match <- function(x, y, cutoff=1,boost=TRUE){
 
   # print(match.index)
     if(length(index.cutoff.end) == 0){
-      tibble::tibble(start = NA, end = NA)
+        # tibble::tibble(start = NA, end = NA)
+        data.frame(start = NA, end = NA)
       } else {
-    tibble::tibble(start = index.cutoff.start, end = index.cutoff.end)
+        # tibble::tibble(start = index.cutoff.start, end = index.cutoff.end)
+        data.frame(start = index.cutoff.start, end = index.cutoff.end)
       }
 }
 

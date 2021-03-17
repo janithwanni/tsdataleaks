@@ -25,7 +25,8 @@ find_dataleaks <- function(lstx, h, cutoff=1,boost=TRUE){
 
   }
 
-  result.list <- purrr::map(result, plyr::ldply, data.frame)
+  # result.list <- purrr::map(result, plyr::ldply, data.frame)
+  result.list <- do.call("rbind",result)
   n.result.list <- length(result.list)
   resul.list.clean <- list()
   for(i in 1:n){
